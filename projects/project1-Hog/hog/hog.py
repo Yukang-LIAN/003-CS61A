@@ -48,6 +48,7 @@ def free_bacon(score):
     # Trim pi to only (score + 1) digit(s)
     # BEGIN PROBLEM 2
     "*** YOUR CODE HERE ***"
+    pi = pi//pow(10, 100-score)
     # END PROBLEM 2
 
     return pi % 10 + 3
@@ -68,6 +69,9 @@ def take_turn(num_rolls, opponent_score, dice=six_sided):
     assert opponent_score < 100, 'The game should be over.'
     # BEGIN PROBLEM 3
     "*** YOUR CODE HERE ***"
+    if num_rolls == 0:
+        return free_bacon(opponent_score)
+    return roll_dice(num_rolls, dice)
     # END PROBLEM 3
 
 
@@ -90,6 +94,15 @@ def swine_align(player_score, opponent_score):
     """
     # BEGIN PROBLEM 4a
     "*** YOUR CODE HERE ***"
+    if player_score == 0 or opponent_score == 0:
+        return False
+    for n in range(1, min(player_score, opponent_score)+1):
+        if player_score % n == 0 and opponent_score % n == 0:
+            greatest_common_divisor = n
+        n += 1
+    if greatest_common_divisor >= 10:
+        return True
+    return False
     # END PROBLEM 4a
 
 
@@ -112,6 +125,9 @@ def pig_pass(player_score, opponent_score):
     """
     # BEGIN PROBLEM 4b
     "*** YOUR CODE HERE ***"
+    if(player_score > opponent_score-3 and player_score < opponent_score):
+        return True
+    return False
     # END PROBLEM 4b
 
 
@@ -151,6 +167,7 @@ def play(strategy0, strategy1, score0=0, score1=0, dice=six_sided,
     who = 0  # Who is about to take a turn, 0 (first) or 1 (second)
     # BEGIN PROBLEM 5
     "*** YOUR CODE HERE ***"
+
     # END PROBLEM 5
     # (note that the indentation for the problem 6 prompt (***YOUR CODE HERE***) might be misleading)
     # BEGIN PROBLEM 6
@@ -387,6 +404,8 @@ def run(*args):
         run_experiments()
 
 
-counted_dice = make_test_dice(4, 1, 2, 6)
-roll_dice(3, counted_dice)
-roll_dice(1, counted_dice)
+always_three = make_test_dice(3)
+always_seven = make_test_dice(7)
+strat0 = lambda score, opponent: opponent % 10
+strat1 = lambda score, opponent: max((score // 10) - 4, 0)
+s0, s1 = play(strat0, strat1, score0=71, score1=80, dice=always_seven)
