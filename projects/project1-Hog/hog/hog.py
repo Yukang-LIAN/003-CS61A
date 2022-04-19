@@ -167,6 +167,22 @@ def play(strategy0, strategy1, score0=0, score1=0, dice=six_sided,
     who = 0  # Who is about to take a turn, 0 (first) or 1 (second)
     # BEGIN PROBLEM 5
     "*** YOUR CODE HERE ***"
+    while score0 < goal and score1 < goal:
+        if who == 0:
+            turn_points = take_turn(strategy0(score0, score1), score1, dice)
+            score0 += turn_points
+            if extra_turn(score0, score1):
+                who = 0
+            else:
+                who = other(0)
+        elif who == 1:
+            turn_points = take_turn(strategy1(score1, score0), score0, dice)
+            score1 += turn_points
+            if extra_turn(score1, score0):
+                who = 1
+            else:
+                who = other(1)
+    return score0, score1
 
     # END PROBLEM 5
     # (note that the indentation for the problem 6 prompt (***YOUR CODE HERE***) might be misleading)
@@ -406,6 +422,8 @@ def run(*args):
 
 always_three = make_test_dice(3)
 always_seven = make_test_dice(7)
-strat0 = lambda score, opponent: opponent % 10
-strat1 = lambda score, opponent: max((score // 10) - 4, 0)
+def strat0(score, opponent): return opponent % 10
+def strat1(score, opponent): return max((score // 10) - 4, 0)
+
+
 s0, s1 = play(strat0, strat1, score0=71, score1=80, dice=always_seven)
