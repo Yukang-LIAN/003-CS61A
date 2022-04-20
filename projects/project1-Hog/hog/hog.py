@@ -271,6 +271,20 @@ def announce_highest(who, last_score=0, running_high=0):
     assert who == 0 or who == 1, 'The who argument should indicate a player.'
     # BEGIN PROBLEM 7
     "*** YOUR CODE HERE ***"
+    def say(score0, score1):
+        f_running_high=running_high
+        f_last_score=last_score
+        if who == 0:
+            score = score0
+        else:
+            score = score1
+        if (score-last_score) > running_high:
+            print(score-last_score, "point(s)! The most yet for Player", who)
+            f_running_high = score-last_score
+        f_last_score = score
+        return announce_highest(who, f_last_score, f_running_high)
+    return say
+
     # END PROBLEM 7
 
 
@@ -419,17 +433,6 @@ def run(*args):
         run_experiments()
 
 
-
-
-
-def total(s0, s1):
-    print(s0 + s1)
-    return echo
-def echo(s0, s1):
-    print(s0, s1)
-    return total
-s0, s1 = play(always_roll(1), always_roll(1), dice=make_test_dice(2, 5), goal=10, say=echo)
-
-
-
-
+f0 = announce_highest(1)  # Only announce Player 1 score gains
+f1 = f0(12, 0)
+f2 = f1(12, 10)
