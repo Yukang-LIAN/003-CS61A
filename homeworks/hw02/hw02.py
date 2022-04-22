@@ -112,6 +112,12 @@ def missing_digits(n):
     True
     """
     "*** YOUR CODE HERE ***"
+    if (n % 10) == ((n//10) % 10):
+        return missing_digits(n//10)
+    if n < 10:
+        return 0
+    else:
+        return (n % 10)-((n//10) % 10)-1+missing_digits(n//10)
 
 
 def next_largest_coin(coin):
@@ -148,6 +154,16 @@ def count_coins(total):
     True
     """
     "*** YOUR CODE HERE ***"
+    def count_partitions(n, coin):
+        if n == coin:
+            return 1
+        if n < coin:
+            return 0
+        elif coin <= 10:
+            return count_partitions(n, next_largest_coin(coin))+count_partitions(n-coin, coin)
+        else:
+            return count_partitions(n-coin, coin)
+    return count_partitions(total, 1)
 
 
 def make_anonymous_factorial():
@@ -160,4 +176,4 @@ def make_anonymous_factorial():
     >>> check(HW_SOURCE_FILE, 'make_anonymous_factorial', ['Assign', 'AugAssign', 'FunctionDef', 'Recursion'])
     True
     """
-    return 'YOUR_EXPRESSION_HERE'
+    return (lambda b: (lambda a, b: a(a, b))(lambda a, b: b*a(a, b-1) if b > 0 else 1,b))
