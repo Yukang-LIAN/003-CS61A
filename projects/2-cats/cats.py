@@ -171,6 +171,18 @@ def report_progress(typed, prompt, user_id, send):
     """Send a report of your id and progress so far to the multiplayer server."""
     # BEGIN PROBLEM 8
     "*** YOUR CODE HERE ***"
+    correct = 0
+    for x, y in zip(typed, prompt):
+        if x == y:
+            correct += 1
+        else:
+            break
+    ratio = correct/len(prompt)
+    d = {}
+    d['id'] = user_id
+    d['progress'] = ratio
+    send(d)
+    return ratio
     # END PROBLEM 8
 
 
@@ -197,7 +209,15 @@ def time_per_word(times_per_player, words):
     """
     # BEGIN PROBLEM 9
     "*** YOUR CODE HERE ***"
+    for x in range(0, len(times_per_player)):
+        for y in range(0, len(times_per_player[x])-1):
+            times_per_player[x][y] = times_per_player[x][y+1] - \
+                times_per_player[x][y]
+        del times_per_player[x][-1]
+    return game(words, times_per_player)
     # END PROBLEM 9
+
+
 
 
 def fastest_words(game):
@@ -214,6 +234,8 @@ def fastest_words(game):
     word_indices = range(len(all_words(game)))
     # BEGIN PROBLEM 10
     "*** YOUR CODE HERE ***"
+    for word in word_indices:
+        all_words(game)[word]
     # END PROBLEM 10
 
 
@@ -311,6 +333,3 @@ def run(*args):
     args = parser.parse_args()
     if args.t:
         run_typing_test(args.topic)
-
-
-shifty_shifts("this", "that", 4)
