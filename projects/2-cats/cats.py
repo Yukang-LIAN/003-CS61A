@@ -234,9 +234,19 @@ def fastest_words(game):
     word_indices = range(len(all_words(game)))
     # BEGIN PROBLEM 10
     "*** YOUR CODE HERE ***"
-    for word in word_indices:
-        all_words(game)[word]
+    L=[]
+    for player_index in player_indices:
+        L.append([])
+    for word_index in word_indices:
+        min_time=10000
+        for player_index in player_indices:
+            if min_time>time(game,player_index,word_index):
+                min_time=time(game,player_index,word_index)
+                min_player=player_index
+        L[min_player].append(word_at(game, word_index))
+    return L
     # END PROBLEM 10
+
 
 
 def game(words, times):
@@ -333,3 +343,6 @@ def run(*args):
     args = parser.parse_args()
     if args.t:
         run_typing_test(args.topic)
+        
+        
+
