@@ -1,4 +1,5 @@
 from math import sqrt
+from sre_constants import BRANCH
 
 
 def couple(s, t):
@@ -170,13 +171,13 @@ def berry_finder(t):
     while(is_tree(t)):
         if label(t) == 'berry':
             return True
-        elif branches(t)!=[]:
+        elif branches(t) != []:
             for branch in branches(t):
-                if(berry_finder(branch)==True):
+                if(berry_finder(branch) == True):
                     return True
             return False
-        elif branches(t)==[]:
-            t=[]
+        elif branches(t) == []:
+            t = []
 
 
 def sprout_leaves(t, leaves):
@@ -213,7 +214,12 @@ def sprout_leaves(t, leaves):
           2
     """
     "*** YOUR CODE HERE ***"
-
+    if is_leaf(t):
+        t = tree(label(t), [tree(i) for i in leaves])
+    else:
+        t = tree(label(t), [sprout_leaves(branch, leaves)
+                 for branch in branches(t)])
+    return t
 # Abstraction tests for sprout_leaves and berry_finder
 
 
@@ -273,7 +279,7 @@ def coords(fn, seq, lower, upper):
     [[-2, 4], [1, 1], [3, 9]]
     """
     "*** YOUR CODE HERE ***"
-    return ______
+    return list([num, fn(num)] for num in seq if fn(num) <= upper and fn(num) >= lower)
 
 
 def riffle(deck):
@@ -286,7 +292,7 @@ def riffle(deck):
     [0, 10, 1, 11, 2, 12, 3, 13, 4, 14, 5, 15, 6, 16, 7, 17, 8, 18, 9, 19]
     """
     "*** YOUR CODE HERE ***"
-    return _______
+    return [deck[i//2] if i % 2 == 0 else deck[(i-1)//2+len(deck)//2] for i in range(0, len(deck))]
 
 
 def add_trees(t1, t2):
@@ -325,6 +331,19 @@ def add_trees(t1, t2):
       5
     """
     "*** YOUR CODE HERE ***"
+    if (is_leaf(t1) and is_leaf(t2)):
+        return tree(label(t1)+label(t2))
+    elif (is_leaf(t1) and not is_leaf(t2)):
+        return tree(label(t1)+label(t2), branches(t2))
+    elif (not is_leaf(t1) and is_leaf(t2)):
+        return tree(label(t1)+label(t2), branches(t1))
+    else:
+        m = min(len(t1), len(t2))
+        result = [label(t1)+label(t2)]
+        for i in range(0, m-1):
+            result.append(add_trees(branches(t1)[i], branches(t2)[i]))
+        result = result + branches(t1)[m-1:] + branches(t2)[m-1:]
+        return result 
 
 
 def build_successors_table(tokens):
@@ -346,7 +365,10 @@ def build_successors_table(tokens):
     for word in tokens:
         if prev not in table:
             "*** YOUR CODE HERE ***"
+            table[prev]=[word]
         "*** YOUR CODE HERE ***"
+        if word not in table[prev]:
+            table[prev]+=[word]
         prev = word
     return table
 
@@ -365,6 +387,9 @@ def construct_sent(word, table):
     result = ''
     while word not in ['.', '!', '?']:
         "*** YOUR CODE HERE ***"
+        result+=word
+        result+=' '
+        word=random.choice(table[word])
     return result.strip() + word
 
 
@@ -486,5 +511,3 @@ def copy_tree(t):
     return tree(label(t), [copy_tree(b) for b in branches(t)])
 
 
-numbers = tree(1, [tree(2), tree(3, [tree(4), tree(5)]), tree(6, [tree(7)])])
-berry_finder(numbers)
