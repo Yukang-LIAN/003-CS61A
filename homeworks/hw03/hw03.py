@@ -1,3 +1,6 @@
+from cmath import inf
+
+
 HW_SOURCE_FILE = __file__
 
 
@@ -207,8 +210,8 @@ def replace_leaf(t, find_value, replace_value):
             return t
     else:
         for branch in branches(t):
-            replace_t+=[replace_leaf(branch, find_value, replace_value)]
-    return tree(label(t),replace_t)
+            replace_t += [replace_leaf(branch, find_value, replace_value)]
+    return tree(label(t), replace_t)
 
 
 def preorder(t):
@@ -222,12 +225,12 @@ def preorder(t):
     [2, 4, 6]
     """
     "*** YOUR CODE HERE ***"
-    pre=[label(t)]
+    pre = [label(t)]
     if is_leaf(t):
         return [label(t)]
     else:
         for branch in branches(t):
-            pre+=preorder(branch)
+            pre += preorder(branch)
     return pre
 
 
@@ -261,20 +264,18 @@ def has_path(t, word):
     """
     assert len(word) > 0, 'no path for empty word.'
     "*** YOUR CODE HERE ***"
-    if word[0]==label(t) and len(word)==1:
+    if word[0] == label(t) and len(word) == 1:
         return True
-    if word[0]!=label(t):
+    if word[0] != label(t):
         return False
     if is_leaf(t):
-        if word[0]==label(t):
+        if word[0] == label(t):
             return True
         return False
     for branch in branches(t):
-        if has_path(branch,word[1:]):
+        if has_path(branch, word[1:]):
             return True
     return False
-    
-            
 
 
 def interval(a, b):
@@ -285,11 +286,13 @@ def interval(a, b):
 def lower_bound(x):
     """Return the lower bound of interval x."""
     "*** YOUR CODE HERE ***"
+    return x[0]
 
 
 def upper_bound(x):
     """Return the upper bound of interval x."""
     "*** YOUR CODE HERE ***"
+    return x[1]
 
 
 def str_interval(x):
@@ -309,17 +312,21 @@ def add_interval(x, y):
 def mul_interval(x, y):
     """Return the interval that contains the product of any value in x and any
     value in y."""
-    p1 = x[0] * y[0]
-    p2 = x[0] * y[1]
-    p3 = x[1] * y[0]
-    p4 = x[1] * y[1]
-    return [min(p1, p2, p3, p4), max(p1, p2, p3, p4)]
+    p1 = lower_bound(x)*lower_bound(y)
+    p2 = lower_bound(x)*upper_bound(y)
+    p3 = upper_bound(x)*lower_bound(y)
+    p4 = upper_bound(x)*upper_bound(y)
+    return interval(min(p1, p2, p3, p4), max(p1, p2, p3, p4))
 
 
 def sub_interval(x, y):
     """Return the interval that contains the difference between any value in x
     and any value in y."""
     "*** YOUR CODE HERE ***"
+    lower= lower_bound(x)-upper_bound(y)
+    upper = upper_bound(x)-lower_bound(y)
+    return interval(lower,upper)
+    
 
 
 def div_interval(x, y):
@@ -327,6 +334,7 @@ def div_interval(x, y):
     any value in y. Division is implemented as the multiplication of x by the
     reciprocal of y."""
     "*** YOUR CODE HERE ***"
+    assert upper_bound(y)*lower_bound(y)>0, 'x is divided by 0! '
     reciprocal_y = interval(1/upper_bound(y), 1/lower_bound(y))
     return mul_interval(x, reciprocal_y)
 
@@ -351,8 +359,8 @@ def check_par():
     >>> lower_bound(x) != lower_bound(y) or upper_bound(x) != upper_bound(y)
     True
     """
-    r1 = interval(1, 1)  # Replace this line!
-    r2 = interval(1, 1)  # Replace this line!
+    r1 = interval(1, 2)  # Replace this line!
+    r2 = interval(1, 2)  # Replace this line!
     return r1, r2
 
 
@@ -370,6 +378,20 @@ def quadratic(x, a, b, c):
     '0 to 10'
     """
     "*** YOUR CODE HERE ***"
+    extreme=-b/(2*a)
+    def f(t):
+        return a*t*t+b*t+c
+    if a<0:
+        if extreme<upper_bound(x) and extreme>lower_bound(x):
+            return interval(min(f(upper_bound(x)),f(lower_bound(x))),f(extreme))
+        else:
+            return interval(min(f(upper_bound(x)),f(lower_bound(x))),max(f(upper_bound(x)),f(lower_bound(x))))
+    else:
+        if extreme<upper_bound(x) and extreme>lower_bound(x):
+            return interval(f(extreme),max(f(upper_bound(x)),f(lower_bound(x))))
+        else:
+            return interval(min(f(upper_bound(x)),f(lower_bound(x))),max(f(upper_bound(x)),f(lower_bound(x))))
+        
 
 
 # Tree ADT
@@ -443,7 +465,3 @@ def copy_tree(t):
     """
     return tree(label(t), [copy_tree(b) for b in branches(t)])
 
-
-greetings = tree('h', [tree('i'),tree('e', [tree('l', [tree('l', [tree('o')])]), tree('y')])])
-
-has_path(greetings, 'h')
