@@ -146,7 +146,14 @@ def permutations(seq):
     [['a', 'b'], ['b', 'a']]
     """
     "*** YOUR CODE HERE ***"
-    
+    if len(seq) == 1:
+        yield seq
+    else:
+        for subseq in permutations(seq[1:]):
+            for i in range(0, len(subseq)+1):
+                output = list(subseq)
+                output.insert(i, seq[0])
+                yield output
 
 
 def make_joint(withdraw, old_pass, new_pass):
