@@ -1,3 +1,7 @@
+from curses import nonl
+from re import A
+
+
 this_file = __file__
 
 
@@ -17,6 +21,13 @@ def make_adder_inc(a):
     11
     """
     "*** YOUR CODE HERE ***"
+    c = -1
+
+    def helper(b):
+        nonlocal c
+        c += 1
+        return a+b+c
+    return helper
 
 
 def make_fib():
@@ -43,6 +54,17 @@ def make_fib():
     True
     """
     "*** YOUR CODE HERE ***"
+    a = 0
+    b = -1
+    c = 1
+
+    def helper():
+        nonlocal a, b, c
+        a = b
+        b = c
+        c = b+a
+        return c
+    return helper
 
 
 def insert_items(lst, entry, elem):
@@ -62,4 +84,14 @@ def insert_items(lst, entry, elem):
     True
     """
     "*** YOUR CODE HERE ***"
+    i = 0
+    while(i < len(lst)):
+        if lst[i] == entry:
+            lst.insert(i+1, elem)
+            i += 1
+        i += 1
+    return lst
 
+
+test_lst = [1, 5, 8, 5, 2, 3]
+new_lst = insert_items(test_lst, 5, 7)
