@@ -66,7 +66,7 @@ def make_withdraw(balance, password):
     s = []
     Frozen = False
 
-    def helper(money, input_password):
+    def withdraw(money, input_password):
         nonlocal s
         nonlocal balance
         nonlocal password
@@ -83,7 +83,7 @@ def make_withdraw(balance, password):
             s.append(input_password)
             return 'Incorrect password'
 
-    return helper
+    return withdraw
 
 
 def repeated(t, k):
@@ -195,6 +195,15 @@ def make_joint(withdraw, old_pass, new_pass):
     "Frozen account. Attempts: ['my', 'secret', 'password']"
     """
     "*** YOUR CODE HERE ***"
+    message = withdraw(0, old_pass)
+    if type(message) == str:
+        return message
+
+    def joint(money, password):
+        if password == old_pass or password == new_pass:
+            return withdraw(money, old_pass)
+        return withdraw(money, password)
+    return joint
 
 
 def remainders_generator(m):
@@ -229,6 +238,12 @@ def remainders_generator(m):
     11
     """
     "*** YOUR CODE HERE ***"
+    def remainders(i):
+        for x in naturals():
+            if x % m == i:
+                yield x
+    for i in range(0, m):
+        yield remainders(i)
 
 
 def naturals():
@@ -245,4 +260,3 @@ def naturals():
     while True:
         yield i
         i += 1
-
