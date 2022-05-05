@@ -1,6 +1,7 @@
 """CS 61A presents Ants Vs. SomeBees."""
 
 import random
+from sys import implementation
 from ucb import main, interact, trace
 from collections import OrderedDict
 
@@ -292,8 +293,8 @@ class HungryAnt(Ant):
     def eat_bee(self, bee):
         # BEGIN Problem 6
         "*** YOUR CODE HERE ***"
-        eat_bee=rANTdom_else_none(bee)
-        Insect.reduce_armor(eat_bee,eat_bee.armor)
+        eat_bee = rANTdom_else_none(bee)
+        Insect.reduce_armor(eat_bee, eat_bee.armor)
         # END Problem 6
 
     def action(self, gamestate):
@@ -304,14 +305,21 @@ class HungryAnt(Ant):
             self.eat_bee(self.place.bees)
         else:
             self.digesting -= 1
-            if self.digesting<0:
-                self.digesting=0
+            if self.digesting < 0:
+                self.digesting = 0
 
         # END Problem 6
 
 
 # BEGIN Problem 7
 # The WallAnt class
+class WallAnt(Ant):
+    name = 'Wall'
+    food_cost = 4
+    implemented = True
+
+    def __init__(self, armor=4):
+        Ant.__init__(self, armor)
 # END Problem 7
 
 
