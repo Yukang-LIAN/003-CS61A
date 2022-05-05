@@ -1,3 +1,6 @@
+import re
+
+
 class VendingMachine:
     """A vending machine that vends some product for some price.
 
@@ -36,6 +39,37 @@ class VendingMachine:
     'Here is your soda.'
     """
     "*** YOUR CODE HERE ***"
+    def __init__(self, type_name, price):
+        self.type_name = type_name
+        self.price = price
+        self.stock = 0
+        self.balance = 0
+    
+    def vend(self):
+        if self.stock >= 1 and self.balance >= self.price:
+            self.stock -= 1
+            self.balance -= self.price
+            if self.balance != 0:
+                temp = self.balance
+                self.balance = 0
+                return 'Here is your {0} and ${1} change.'.format(self.type_name, temp)
+            else:
+                return 'Here is your {0}.'.format(self.type_name)
+        elif self.stock == 0:
+            return 'Inventory empty. Restocking required.'
+        elif self.balance < self.price:
+            return 'You must add ${0} more funds.'.format(self.price-self.balance)
+
+    def restock(self, n):
+        self.stock += n
+        return 'Current {0} stock: {1}'.format(self.type_name, self.stock)
+    
+    def add_funds(self, n):
+        if self.stock == 0:
+            return 'Inventory empty. Restocking required. Here is your ${0}.'.format(n)
+        else:
+            self.balance += n
+            return 'Current balance: ${0}'.format(self.balance)
 
 
 class Mint:
@@ -74,9 +108,11 @@ class Mint:
 
     def create(self, kind):
         "*** YOUR CODE HERE ***"
+        return kind(self.year)
 
     def update(self):
         "*** YOUR CODE HERE ***"
+        self.year=Mint.current_year
 
 class Coin:
     def __init__(self, year):
@@ -84,6 +120,7 @@ class Coin:
 
     def worth(self):
         "*** YOUR CODE HERE ***"
+        return self.cents+Mint.current_year-self.year-50 if Mint.current_year-self.year>50 else self.cents
 
 class Nickel(Coin):
     cents = 5
@@ -108,6 +145,13 @@ def store_digits(n):
     >>> print("Do not use str or reversed!") if any([r in cleaned for r in ["str", "reversed"]]) else None
     """
     "*** YOUR CODE HERE ***"
+    num=0
+    while(10**num<=n):
+        num+=1
+    if n//10==0:
+        return Link(n%10,Link.empty)
+    else:
+        return Link(n//(10**(num-1)),store_digits(n%(10**(num-1))))
 
 
 def is_bst(t):
