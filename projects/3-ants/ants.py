@@ -178,7 +178,7 @@ class ThrowerAnt(Ant):
         # BEGIN Problem 3 and 4
         place = self.place
         dis = 0
-        while(place != beehive ):
+        while(place != beehive):
             if (len(place.bees) != 0 and (self.min_range <= dis <= self.max_range)):
                 return rANTdom_else_none(place.bees)  # REPLACE THIS LINE
             else:
@@ -243,7 +243,7 @@ class FireAnt(Ant):
     food_cost = 5
     # OVERRIDE CLASS ATTRIBUTES HERE
     # BEGIN Problem 5
-    implemented = False   # Change to True to view in the GUI
+    implemented = True  # Change to True to view in the GUI
     # END Problem 5
 
     def __init__(self, armor=3):
@@ -259,6 +259,14 @@ class FireAnt(Ant):
         """
         # BEGIN Problem 5
         "*** YOUR CODE HERE ***"
+        if self.armor-amount > 0:
+            for bee in self.place.bees[:]:
+                Insect.reduce_armor(bee, amount)
+        else:
+            for bee in self.place.bees[:]:
+                Insect.reduce_armor(bee, amount+self.damage)
+        Ant.reduce_armor(self, amount)
+
         # END Problem 5
 
 
@@ -875,3 +883,17 @@ class AssaultPlan(dict):
     def all_bees(self):
         """Place all Bees in the beehive and return the list of Bees."""
         return [bee for wave in self.values() for bee in wave]
+
+
+beehive, layout = Hive(AssaultPlan()), dry_layout
+dimensions = (1, 9)
+gamestate = GameState(None, beehive, ant_types(), layout, dimensions)
+#
+# Testing fire does damage to all Bees in its Place
+place = gamestate.places['tunnel_0_4']
+fire = FireAnt(armor=1)
+place.add_insect(fire)        # Add a FireAnt with 1 armor
+place.add_insect(Bee(3))      # Add a Bee with 3 armor
+place.add_insect(Bee(5))      # Add a Bee with 5 armor
+len(place.bees)               # How many bees are ther
+place.bees[0].action(gamestate)  # The first Bee attacks FireAnt
