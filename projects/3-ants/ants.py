@@ -111,6 +111,7 @@ class Ant(Insect):
     def __init__(self, armor=1):
         """Create an Ant with an ARMOR quantity."""
         Insect.__init__(self, armor)
+        self.buffed=False
 
     def can_contain(self, other):
         return False
@@ -339,17 +340,19 @@ class Water(Place):
 
 # BEGIN Problem 9
 # The ScubaThrower class
+
+
 class ScubaThrower(ThrowerAnt):
-    food_cost=6
-    name='Scuba'
-    implemented=True
-    is_watersafe=True
+    food_cost = 6
+    name = 'Scuba'
+    implemented = True
+    is_watersafe = True
 # END Problem 9
 
 # BEGIN Problem EC
 
 
-class QueenAnt(Ant):  # You should change this line
+class QueenAnt(ScubaThrower):  # You should change this line
     # END Problem EC
     """The Queen of the colony. The game is over if a bee enters her place."""
 
@@ -357,12 +360,19 @@ class QueenAnt(Ant):  # You should change this line
     food_cost = 7
     # OVERRIDE CLASS ATTRIBUTES HERE
     # BEGIN Problem EC
-    implemented = False   # Change to True to view in the GUI
+    implemented = True  # Change to True to view in the GUI
+    Queen_num=0
     # END Problem EC
 
     def __init__(self, armor=1):
         # BEGIN Problem EC
         "*** YOUR CODE HERE ***"
+        QueenAnt.Queen_num+=1
+        ScubaThrower.__init__(self, armor)
+        if self.Queen_num==1:
+            self.is_Queen=True
+        else:
+            self.is_Queen=False
         # END Problem EC
 
     def action(self, gamestate):
@@ -373,6 +383,16 @@ class QueenAnt(Ant):  # You should change this line
         """
         # BEGIN Problem EC
         "*** YOUR CODE HERE ***"
+        if not self.is_Queen:
+            QueenAnt.reduce_armor(self,self.armor)
+        else:
+            ant_place=self.place
+            while(ant_place.exit!=None):
+                ant_place=ant_place.exit
+                if(ant_place.ant!=None and ant_place.ant.buffed==False):
+                    ant_place.ant.damage*=2
+                    ant_place.ant.buffed=True
+            ThrowerAnt.action(self,gamestate)
         # END Problem EC
 
     def reduce_armor(self, amount):
@@ -381,8 +401,15 @@ class QueenAnt(Ant):  # You should change this line
         """
         # BEGIN Problem EC
         "*** YOUR CODE HERE ***"
+        Insect.reduce_armor(self,amount)
+        if self.armor<=0 and self.is_Queen:
+            bees_win()
         # END Problem EC
 
+    def remove_from(self, place):
+        if not self.is_Queen:
+            self.place=None
+            place.ant=None
 
 class AntRemover(Ant):
     """Allows the player to remove ants from the board in the GUI."""
@@ -915,16 +942,3 @@ class AssaultPlan(dict):
         """Place all Bees in the beehive and return the list of Bees."""
         return [bee for wave in self.values() for bee in wave]
 
-
-beehive, layout = Hive(AssaultPlan()), dry_layout
-dimensions = (1, 9)
-gamestate = GameState(None, beehive, ant_types(), layout, dimensions)
-#
-# Testing fire does damage to all Bees in its Place
-place = gamestate.places['tunnel_0_4']
-fire = FireAnt(armor=1)
-place.add_insect(fire)        # Add a FireAnt with 1 armor
-place.add_insect(Bee(3))      # Add a Bee with 3 armor
-place.add_insect(Bee(5))      # Add a Bee with 5 armor
-len(place.bees)               # How many bees are ther
-place.bees[0].action(gamestate)  # The first Bee attacks FireAnt
