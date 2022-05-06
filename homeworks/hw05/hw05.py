@@ -39,12 +39,13 @@ class VendingMachine:
     'Here is your soda.'
     """
     "*** YOUR CODE HERE ***"
+
     def __init__(self, type_name, price):
         self.type_name = type_name
         self.price = price
         self.stock = 0
         self.balance = 0
-    
+
     def vend(self):
         if self.stock >= 1 and self.balance >= self.price:
             self.stock -= 1
@@ -63,7 +64,7 @@ class VendingMachine:
     def restock(self, n):
         self.stock += n
         return 'Current {0} stock: {1}'.format(self.type_name, self.stock)
-    
+
     def add_funds(self, n):
         if self.stock == 0:
             return 'Inventory empty. Restocking required. Here is your ${0}.'.format(n)
@@ -112,7 +113,8 @@ class Mint:
 
     def update(self):
         "*** YOUR CODE HERE ***"
-        self.year=Mint.current_year
+        self.year = Mint.current_year
+
 
 class Coin:
     def __init__(self, year):
@@ -120,10 +122,12 @@ class Coin:
 
     def worth(self):
         "*** YOUR CODE HERE ***"
-        return self.cents+Mint.current_year-self.year-50 if Mint.current_year-self.year>50 else self.cents
+        return self.cents+Mint.current_year-self.year-50 if Mint.current_year-self.year > 50 else self.cents
+
 
 class Nickel(Coin):
     cents = 5
+
 
 class Dime(Coin):
     cents = 10
@@ -145,13 +149,13 @@ def store_digits(n):
     >>> print("Do not use str or reversed!") if any([r in cleaned for r in ["str", "reversed"]]) else None
     """
     "*** YOUR CODE HERE ***"
-    num=0
-    while(10**num<=n):
-        num+=1
-    if n//10==0:
-        return Link(n%10,Link.empty)
+    num = 0
+    while(10**num <= n):
+        num += 1
+    if n//10 == 0:
+        return Link(n % 10, Link.empty)
     else:
-        return Link(n//(10**(num-1)),store_digits(n%(10**(num-1))))
+        return Link(n//(10**(num-1)), store_digits(n % (10**(num-1))))
 
 
 def is_bst(t):
@@ -180,6 +184,27 @@ def is_bst(t):
     False
     """
     "*** YOUR CODE HERE ***"
+    def bst_max(t):
+        if t.is_leaf():
+            return t.label
+        return max([t.label]+list(map(bst_max, t.branches)))
+
+    def bst_min(t):
+        if t.is_leaf():
+            return t.label
+        return min([t.label]+list(map(bst_min, t.branches)))
+
+    if t.is_leaf():
+        return True
+
+    else:
+        if len(t.branches) == 2:
+            if bst_min(t.branches[1]) > t.label >=bst_max(t.branches[0]):
+                if t.branches[0].label <= t.label and t.branches[1].label > t.label:
+                    return is_bst(t.branches[0]) and is_bst(t.branches[1])
+        elif len(t.branches) == 1:
+            return True
+        return False
 
 
 def preorder(t):
@@ -290,6 +315,7 @@ class Tree:
     >>> t.branches[1].is_leaf()
     True
     """
+
     def __init__(self, label, branches=[]):
         for b in branches:
             assert isinstance(b, Tree)
@@ -354,3 +380,6 @@ class Tree:
             return tree_str
         return print_tree(self).rstrip()
 
+
+#t1 = Tree(6, [Tree(2, [Tree(1), Tree(4)]), Tree(7, [Tree(7), Tree(8)])])
+#is_bst(t1)
