@@ -199,7 +199,7 @@ def is_bst(t):
 
     else:
         if len(t.branches) == 2:
-            if bst_min(t.branches[1]) > t.label >=bst_max(t.branches[0]):
+            if bst_min(t.branches[1]) > t.label >= bst_max(t.branches[0]):
                 if t.branches[0].label <= t.label and t.branches[1].label > t.label:
                     return is_bst(t.branches[0]) and is_bst(t.branches[1])
         elif len(t.branches) == 1:
@@ -218,6 +218,13 @@ def preorder(t):
     [2, 4, 6]
     """
     "*** YOUR CODE HERE ***"
+    pre = []
+    if t.is_leaf():
+        return [t.label]
+    else:
+        for branch in t.branches:
+            pre += preorder(branch)
+        return [t.label]+pre
 
 
 def path_yielder(t, value):
@@ -379,7 +386,3 @@ class Tree:
                 tree_str += print_tree(b, indent + 1)
             return tree_str
         return print_tree(self).rstrip()
-
-
-#t1 = Tree(6, [Tree(2, [Tree(1), Tree(4)]), Tree(7, [Tree(7), Tree(8)])])
-#is_bst(t1)
