@@ -40,6 +40,9 @@
 
 
 (define (no-repeats lst)
-  'YOUR-CODE-HERE
+  (
+    cond ((null? lst) nil)
+      (else (cons (car lst) (no-repeats (filter-lst (lambda (x) (not (= x (car lst))))(cdr lst)))))
+  )
 )
 
