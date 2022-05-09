@@ -32,7 +32,10 @@
 
 
 (define (accumulate combiner start n term)
-  'YOUR-CODE-HERE
+  (
+    cond ((= n 0) start)
+      (else (combiner (term n) (accumulate combiner start (- n 1) term)))
+  )
 )
 
 
