@@ -37,7 +37,9 @@
 
 
 (define (remove item lst)
-  'YOUR-CODE-HERE
+  (cond ((null? lst) '())
+        ((= item (car lst)) (remove item (cdr lst)))
+        (else (cons (car lst) (remove item (cdr lst)))))
 )
 
 
