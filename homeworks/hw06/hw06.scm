@@ -21,6 +21,11 @@
 (define (square x) (* x x))
 
 (define (pow x y)
-  'YOUR-CODE-HERE
+  (cond ((= x 1) 1)
+        ((= y 1) x)
+        ((= y 2) (square x))
+        ((even? y) (square (pow x (/ y 2))))
+        ((odd? y) (* x (square (pow x (/ (- y 1) 2)))))
+  )
 )
 
