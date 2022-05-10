@@ -1,4 +1,5 @@
 import operator
+from re import I
 
 from utils import comma_separated
 
@@ -177,6 +178,12 @@ class CallExpr(Expr):
         Number(14)
         """
         "*** YOUR CODE HERE ***"
+        eval_operands=[]
+        eval_operator=self.operator.eval(env)
+        for i in self.operands:
+            eval_operands+=[i.eval(env)]
+        return eval_operator.apply(eval_operands)
+
 
     def __str__(self):
         function = str(self.operator)
@@ -327,4 +334,6 @@ global_env = {
     'sub': PrimitiveFunction(operator.sub),
     'truediv': PrimitiveFunction(operator.truediv),
 }
+
+
 
