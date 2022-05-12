@@ -282,6 +282,12 @@ def do_define_form(expressions, env):
     elif isinstance(target, Pair) and scheme_symbolp(target.first):
         # BEGIN PROBLEM 9
         "*** YOUR CODE HERE ***"
+        func_name = target.first
+        func_formals = target.rest
+        func_body = expressions.rest
+        env.define(func_name, do_lambda_form(
+            Pair(func_formals, func_body), env))
+        return func_name
         # END PROBLEM 9
     else:
         bad_target = target.first if isinstance(target, Pair) else target
