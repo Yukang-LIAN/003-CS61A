@@ -37,6 +37,10 @@ def scheme_eval(expr, env, _=None):  # Optional third argument is ignored
     else:
         # BEGIN PROBLEM 4
         "*** YOUR CODE HERE ***"
+        eval_operator = scheme_eval(first, env)
+        eval_operands = rest
+        validate_procedure(eval_operator)
+        return scheme_apply(eval_operator, eval_operands.map(lambda x: scheme_eval(x, env)), env)
         # END PROBLEM 4
 
 
@@ -108,7 +112,7 @@ class Frame(object):
         "*** YOUR CODE HERE ***"
         if symbol in self.bindings:
             return self.bindings[symbol]
-        if self.parent!=None:
+        if self.parent != None:
             return self.parent.lookup(symbol)
         # END PROBLEM 2
         raise SchemeError('unknown identifier: {0}'.format(symbol))
@@ -169,11 +173,11 @@ class BuiltinProcedure(Procedure):
         python_args = []
         # BEGIN PROBLEM 3
         "*** YOUR CODE HERE ***"
-        while(args!=nil):
-            python_args+=[args.first]
-            args=args.rest
-        if self.use_env==True:
-            python_args+=[env]
+        while(args != nil):
+            python_args += [args.first]
+            args = args.rest
+        if self.use_env == True:
+            python_args += [env]
         # END PROBLEM 3
         try:
             return self.fn(*python_args)
@@ -843,5 +847,3 @@ def run(*argv):
     read_eval_print_loop(next_line, create_global_frame(), startup=True,
                          interactive=interactive, load_files=load_files)
     tscheme_exitonclick()
-
-
