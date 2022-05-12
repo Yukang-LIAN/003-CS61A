@@ -169,6 +169,11 @@ class BuiltinProcedure(Procedure):
         python_args = []
         # BEGIN PROBLEM 3
         "*** YOUR CODE HERE ***"
+        while(args!=nil):
+            python_args+=[args.first]
+            args=args.rest
+        if self.use_env==True:
+            python_args+=[env]
         # END PROBLEM 3
         try:
             return self.fn(*python_args)
@@ -838,3 +843,5 @@ def run(*argv):
     read_eval_print_loop(next_line, create_global_frame(), startup=True,
                          interactive=interactive, load_files=load_files)
     tscheme_exitonclick()
+
+
