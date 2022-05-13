@@ -45,7 +45,7 @@
 (define (second-operand p) (caddr p))
 
 (define (derive-sum expr var)
-  'YOUR-CODE-HERE
+   (make-sum (derive (first-operand expr) var) (derive (second-operand expr) var))
 )
 
 (define (derive-product expr var)
