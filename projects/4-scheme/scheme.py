@@ -140,13 +140,13 @@ class Frame(object):
             raise SchemeError('Incorrect number of arguments to function call')
         # BEGIN PROBLEM 10
         "*** YOUR CODE HERE ***"
-        NewFrame=Frame(self)
-        while formals!=nil:
-            i=formals.first
-            j=vals.first
-            NewFrame.define(i,j)
-            formals=formals.rest
-            vals=vals.rest
+        NewFrame = Frame(self)
+        while formals != nil:
+            i = formals.first
+            j = vals.first
+            NewFrame.define(i, j)
+            formals = formals.rest
+            vals = vals.rest
         return NewFrame
         # END PROBLEM 10
 
@@ -221,7 +221,7 @@ class LambdaProcedure(Procedure):
         of values, for a lexically-scoped call evaluated in environment ENV."""
         # BEGIN PROBLEM 11
         "*** YOUR CODE HERE ***"
-        return self.env.make_child_frame(self.formals,args)
+        return self.env.make_child_frame(self.formals, args)
         # END PROBLEM 11
 
     def __str__(self):
@@ -377,14 +377,14 @@ def do_and_form(expressions, env):
     """
     # BEGIN PROBLEM 12
     "*** YOUR CODE HERE ***"
-    if expressions==nil:
+    if expressions == nil:
         return True
-    while expressions!=nil:
-        output=scheme_eval(expressions.first,env)
-        #if output==False and not output is 0:
+    while expressions != nil:
+        output = scheme_eval(expressions.first, env)
+        # if output==False and not output is 0:
         if is_false_primitive(output):
             return False
-        expressions=expressions.rest
+        expressions = expressions.rest
     return output
 
     # END PROBLEM 12
@@ -405,13 +405,13 @@ def do_or_form(expressions, env):
     """
     # BEGIN PROBLEM 12
     "*** YOUR CODE HERE ***"
-    if expressions==nil:
+    if expressions == nil:
         return False
-    while expressions!=nil:
-        output=scheme_eval(expressions.first,env)
+    while expressions != nil:
+        output = scheme_eval(expressions.first, env)
         if is_true_primitive(output):
             return output
-        expressions=expressions.rest
+        expressions = expressions.rest
     return output
     # END PROBLEM 12
 
@@ -434,6 +434,9 @@ def do_cond_form(expressions, env):
         if is_true_primitive(test):
             # BEGIN PROBLEM 13
             "*** YOUR CODE HERE ***"
+            if clause.rest == nil:
+                return test
+            return eval_all(clause.rest, env)
             # END PROBLEM 13
         expressions = expressions.rest
 
