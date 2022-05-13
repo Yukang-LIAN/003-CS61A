@@ -43,8 +43,14 @@
 
 (define (nondecreaselist s)
     ; BEGIN PROBLEM 17
-    'replace-this-line
+    (cond
+    ((equal? (cdr s) nil) (cons s nil))
+    ((> (car s) (cadr s))
+      (cons (cons (car s) nil) (nondecreaselist (cdr s))))
+    (else
+      (cons (cons (car s) (car (nondecreaselist (cdr s)))) (cdr (nondecreaselist (cdr s)))))
     )
+)
     ; END PROBLEM 17
 
 ;; Problem EC
