@@ -13,7 +13,10 @@
 ;; Returns a list of two-element lists
 (define (enumerate s)
   ; BEGIN PROBLEM 15
-  'replace-this-line
+  (begin (define (helper index s)
+                 (cond ((null? s) s)
+                       (else (cons (cons index (cons (car s) nil)) (helper (+ 1 index) (cdr s))))))
+         (helper 0 s))
   )
   ; END PROBLEM 15
 
